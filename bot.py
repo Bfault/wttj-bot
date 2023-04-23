@@ -20,7 +20,6 @@ class presence_of_n_element_located():
         self.locator = locator
         self.n = n
         self.comp = comp
-        self.sent_error = 0
 
     def __call__(self, driver):
         elements = driver.find_elements(*self.locator)
@@ -45,6 +44,7 @@ class Bot:
         self.keyword = args.keyword
         self.language = args.language
         self.companies = []
+        self.sent_error = 0
         self.service = webdriver.chrome.service.Service(
             ChromeDriverManager().install())
         self.service.start()
@@ -160,7 +160,7 @@ class Bot:
         driver.close()
 
     def send_application(self, company):
-        driver = self._build_driver(headless=False)
+        driver = self._build_driver()
         driver.maximize_window()
 
         url = "https://www.welcometothejungle.com/fr/companies/" + company + "/jobs"
@@ -182,8 +182,8 @@ class Bot:
             textarea = driver.find_element(By.CLASS_NAME, "eRjJOf")
             textarea.clear()
 
-            if os.path.exists(self.args.motivation_letter_path):
-                with open(self.args.motivation_letter_path, "r") as f:
+            if os.path.exists(self.args.cover_letter_path):
+                with open(self.args.cover_letter_path, "r") as f:
                     textarea.send_keys(f.read())
 
             driver.find_element(By.ID, "terms").click()
@@ -202,16 +202,15 @@ argparser = argparse.ArgumentParser()
 argparser.add_argument("-k", "--keyword", type=str, required=True)
 argparser.add_argument("-l", "--language", type=str, choices=["fr", "en"])
 argparser.add_argument("-b", "--blacklist-path", type=str)
-argparser.add_argument("-m", "--motivation-letter-path", type=str)
-argparser.add_argument("-a", "--send-application", action="store_true")
+argparser.add_argument("-c", "--cover-letter-path", type=str)
 argparser.add_argument("-o", "--output-companies", type=str)
 
 args = argparser.parse_args()
 
 bot = Bot(args)
 
-if args.send_application:
-    if not os.path.exists(args.motivation_letter_path):
+if args.cover_letter_path is not None:
+    if not os.path.exists(args.cover_letter_path):
         print("Could not find motivation letter")
         exit(1)
 
@@ -219,9 +218,9 @@ if args.send_application:
 
 companies = bot.get_companies()
 
-if args.send_application:
+if args.cover_letter_path is not None:
     print("Sending application to {} companies...".format(len(companies)))
-    for company in companies:
+    for company in tqdm(companies):
         bot.send_application(company)
 
     print("Done: {} companies have not been applied due to errors".format(bot.sent_error))

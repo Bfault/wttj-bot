@@ -23,6 +23,6 @@ python3 bot.py -k "python" -l "fr" -o "companies.txt"
 to fetch all companies with keyword "python" and language "fr" and save them in "companies.txt"
 
 ```bash
-python3 bot.py -k "python" -l "fr" -a -m "cover_letter.txt"
+python3 bot.py -k "python" -l "fr" -c "cover_letter.txt"
 ```
 to send application to all companies with keyword "python" and language "fr" and use "cover_letter.txt" as cover letter
