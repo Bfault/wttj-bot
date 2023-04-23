@@ -190,6 +190,7 @@ class Bot:
             driver.find_element(By.ID, "consent").click()
         
             driver.find_element(By.CLASS_NAME, "eklxSQ").click()
+            time.sleep(2) # too lazy to touch this
         except Exception as e:
             print(f"Error while sending application to {company}: {e}")
             self.sent_error += 1
