@@ -62,7 +62,7 @@ class Bot:
     def blacklisted_companies(self):
         blacklisted_companies = ["fr", "wttj"]
         blacklist_path = self.args.blacklist_path
-        if os.path.exists(blacklist_path):
+        if blacklist_path is not None and os.path.exists(blacklist_path):
             with open(blacklist_path, "r") as f:
                 blacklisted_companies += f.read().split("\n")
         
@@ -146,7 +146,7 @@ class Bot:
         self.companies = [
             company for company in self.companies if company not in self.blacklisted_companies]
 
-        if args.output_companies:
+        if args.output_companies is not None:
             with open(args.output_companies, "w") as f:
                 f.write("\n".join(self.companies))
         return self.companies
