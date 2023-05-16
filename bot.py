@@ -109,7 +109,7 @@ class Bot:
         soup = BeautifulSoup(driver.page_source, "html.parser")
 
         total_pages = 1
-        nav_bar = soup.find("ul", class_="hGfuih")
+        nav_bar = soup.find("ul", class_="sc-dPFVfm")
         if nav_bar is None:
             driver.close()
             return total_pages
